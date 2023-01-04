@@ -1,12 +1,40 @@
 $font-stack: 'Source Code Pro', 'Helvetica Neue', Helvetica, Arial, 'Hiragino Kaku Gothic ProN', 'ヒラギノ角ゴ ProN W3', メイリオ, Meiryo, sans-serif
 $primary-color: #555
 
+$layout-breakpoint-small: 960px
+
+h1.blogTitle
+  color: #999999
+  margin:
+    top: 0
+    bottom: 3em
+
+h2
+  font-size: 200%
+
+h3
+  font-size: 150%
+  padding:
+    top: 3em
+
+section
+  padding:
+    bottom: 6em
+  margin:
+    bottom: 48px
+  line-height: 1.75
+
 main
   color: $primary-color
   text-decoration: none
-  padding: 96px
+  padding: 1em
+  font-size: 86%
   font-family: $font-stack
   max-width: 640px
+
+@media (min-width: $layout-breakpoint-small)
+  main
+    padding: 7em
 
 a
   color: #369ecf
@@ -21,23 +49,6 @@ blockquote
   border:
     left: 2px solid #aaa
   color: #777
-
-h1.blogTitle
-  color: #999999
-  margin:
-    top: 0
-    bottom: 64px
-
-article
-  padding:
-    bottom: 6em
-  margin:
-    bottom: 48px
-  line-height: 1.75
-
-h3
-  padding:
-    top: 3em
 
 .codeStyles
   color: #8A6534

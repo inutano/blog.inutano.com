@@ -25,15 +25,19 @@ export const query = graphql`
 const IndexPage: React.FC<PageProps> = ({data}) => {
   return (
     <main>
-      <Link to='https://blog.inutano.com'>
-        <h1 class='blogTitle'>blog.inutano.com</h1>
-      </Link>
-      {data.allMdx.nodes.map(node => (
-        <article>
-          <h2 id={node.frontmatter.datePublished}>{node.frontmatter.title}</h2>
-          {compiler(node.body)}
-        </article>
-      ))}
+      <header>
+        <Link to='https://blog.inutano.com'>
+          <h1 class='blogTitle'>blog.inutano.com</h1>
+        </Link>
+      </header>
+      <article>
+        {data.allMdx.nodes.map(node => (
+          <section>
+            <h2 id={node.frontmatter.datePublished}>{node.frontmatter.title}</h2>
+            {compiler(node.body)}
+          </section>
+        ))}
+      </article>
     </main>
   )
 }
