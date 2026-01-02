@@ -3,7 +3,7 @@ import type { GatsbyConfig } from "gatsby";
 const config: GatsbyConfig = {
   siteMetadata: {
     title: `blog.inutano.com`,
-    siteUrl: `https://blog.inutano.com`
+    siteUrl: `https://blog.inutano.com`,
   },
   // More easily incorporate content into your pages through automatic TypeScript type generation and better GraphQL IntelliSense.
   // If you use VSCode you can also use the GraphQL plugin
@@ -12,9 +12,9 @@ const config: GatsbyConfig = {
   plugins: [
     "gatsby-plugin-sass",
     {
-      resolve: 'gatsby-plugin-google-analytics',
+      resolve: "gatsby-plugin-google-analytics",
       options: {
-        "trackingId": "G-7TNHDTZMES"
+        trackingId: "G-7TNHDTZMES",
       },
     },
     "gatsby-plugin-image",
@@ -26,22 +26,25 @@ const config: GatsbyConfig = {
       options: {
         name: `blog`,
         path: `${__dirname}/blog`,
-      }
+      },
     },
     {
       resolve: `gatsby-omni-font-loader`,
       options: {
         enableListener: true,
-        preconnect: [`https://fonts.googleapis.com`, `https://fonts.gstatic.com`],
+        preconnect: [
+          `https://fonts.googleapis.com`,
+          `https://fonts.gstatic.com`,
+        ],
         web: [
           {
             name: `Source Code Pro`,
-            file: `http://fonts.googleapis.com/css?family=Source+Code+Pro`
+            file: `https://fonts.googleapis.com/css?family=Source+Code+Pro`,
           },
         ],
       },
     },
-  ]
+  ],
 };
 
 export default config;
