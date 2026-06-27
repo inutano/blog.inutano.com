@@ -99,9 +99,9 @@ date: 2026-06-27
 5. For each post emit:
    `<section><h2 id="SLUG">TITLE</h2>RENDERED_BODY</section>`
    where `SLUG` is the file's basename without extension (e.g. `2024-bestbuy`). Slug
-   anchors are unique and human-readable, which a general multi-topic blog needs
-   (two posts may share a date). This changes the anchor scheme from the old
-   `#YYYYMMDD`; the build fails loudly if two posts resolve to the same slug.
+   anchors are unique (the filesystem guarantees unique filenames within `posts/`)
+   and human-readable, which a general multi-topic blog needs (two posts may share a
+   date). This changes the anchor scheme from the old `#YYYYMMDD`.
 6. Read `template.html.erb`, inject the concatenated sections into the post slot,
    write `_site/index.html`.
 7. Copy `assets/` into `_site/assets/` alongside `index.html`.
@@ -165,7 +165,6 @@ The in-progress `blog/2025-bestbuy/` (currently untracked) is migrated the same 
 - A post missing `title` or `date`, or with an unparseable `date` → build aborts
   with a message naming the offending file, so CI fails loudly rather than
   publishing a broken page.
-- Two posts resolving to the same slug anchor → build aborts naming both files.
 
 ## How to post (README content)
 
