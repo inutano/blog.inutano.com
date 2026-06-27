@@ -70,6 +70,8 @@ def build(posts_dir: POSTS_DIR, template: TEMPLATE, assets: ASSETS, out_dir: OUT
     FileUtils.rm_rf(File.join(out_dir, "assets"))
     FileUtils.cp_r(assets, File.join(out_dir, "assets"))
   end
+  cname = File.join(ROOT, "CNAME")
+  FileUtils.cp(cname, File.join(out_dir, "CNAME")) if File.exist?(cname)
   posts.size
 end
 

@@ -1,17 +1,39 @@
-name: Gatsby Publish
+name: Build and deploy
+
 on:
   push:
-    branches:
-      - main
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
         with:
-          node-version: 18
-      - uses: enriikke/gatsby-gh-pages-action@v2
+          ruby-version: "3.2"
+          bundler-cache: true
+      - run: bundle exec ruby build.rb
+      - uses: actions/upload-pages-artifact@v3
         with:
-          access-token: ${{ secrets.CR_PAT }}
-          deploy-branch: gh-pages
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

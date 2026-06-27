@@ -110,4 +110,14 @@ class BuildTest < Minitest::Test
     assert_includes index, %(<h2 id="2024-foo">Post</h2>)
     assert_path_exists File.join(out, "assets", "style.css")
   end
+
+  def test_build_copies_cname_when_present
+    write("2024-foo.md", "---\ntitle: Post\ndate: 2024-01-02\n---\n\nbody\n")
+    template = File.join(@dir, "tpl.html.erb")
+    File.write(template, "<%= sections %>")
+    out = File.join(@dir, "out")
+    # build() reads CNAME from ROOT (repo root), which contains the real CNAME.
+    build(posts_dir: @dir, template: template, assets: File.join(@dir, "noassets"), out_dir: out)
+    assert_equal "blog.inutano.com", File.read(File.join(out, "CNAME")).strip
+  end
 end
