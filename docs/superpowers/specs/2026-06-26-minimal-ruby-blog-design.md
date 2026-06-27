@@ -5,9 +5,11 @@
 
 ## Problem
 
-`blog.inutano.com` is a zen-style, single-page blog: one scrolling page listing a
-handful of short Japanese "best buy of the year" posts, newest first, with a gray
-title at the top. The *output* is trivial.
+`blog.inutano.com` is a zen-style, single-page **general** blog: one scrolling page
+listing short Japanese posts, newest first, with a gray title at the top. The recent
+posts all happen to be "best buy of the year" entries only because the owner hasn't
+had time to write the more general posts the blog is meant to hold; the system must
+not assume a single topic. The *output* is trivial.
 
 The *machinery* is not. The site is built on Gatsby 5 + React + TypeScript +
 GraphQL + MDX + `gatsby-plugin-sharp` image processing + an omni font loader, with
@@ -39,8 +41,8 @@ system is readable in five minutes years from now.
 ```
 blog.inutano.com/
 ├── posts/
-│   ├── _template.md          # copy to start a new post
-│   ├── 2020-bestbuy.md
+│   ├── _template.md          # generic starter; copy to start a new post
+│   ├── 2020-bestbuy.md       # existing posts keep their names
 │   ├── 2021-bestbuy.md
 │   ├── 2022-bestbuy.md
 │   ├── 2023-bestbuy.md
@@ -64,12 +66,17 @@ All Gatsby-era files: `gatsby-config.ts`, `src/`, `package.json`, `yarn.lock`,
 
 ### Post format
 
-Each post is one Markdown file with two-line YAML frontmatter:
+Each post is one Markdown file in `posts/`. New posts use the general convention
+`YYYY-MM-DD-slug.md` (sortable and descriptive); existing files keep their current
+names. Filename is only an identifier and the anchor source — ordering comes from
+the `date` frontmatter, not the filename.
+
+Two-line YAML frontmatter:
 
 ```markdown
 ---
-title: 2026年に買ってよかったもの
-date: 2026-01-02
+title: 記事のタイトル
+date: 2026-06-27
 ---
 
 本文の Markdown ...
@@ -90,9 +97,11 @@ date: 2026-01-02
 4. Sort posts by `date` descending (newest first). Ties broken by filename
    descending for stable output.
 5. For each post emit:
-   `<section><h2 id="YYYYMMDD">TITLE</h2>RENDERED_BODY</section>`
-   where the `id` is `date` formatted `YYYYMMDD`, preserving today's deep-link
-   anchors.
+   `<section><h2 id="SLUG">TITLE</h2>RENDERED_BODY</section>`
+   where `SLUG` is the file's basename without extension (e.g. `2024-bestbuy`). Slug
+   anchors are unique and human-readable, which a general multi-topic blog needs
+   (two posts may share a date). This changes the anchor scheme from the old
+   `#YYYYMMDD`; the build fails loudly if two posts resolve to the same slug.
 6. Read `template.html.erb`, inject the concatenated sections into the post slot,
    write `_site/index.html`.
 7. Copy `assets/` into `_site/assets/` alongside `index.html`.
@@ -156,10 +165,11 @@ The in-progress `blog/2025-bestbuy/` (currently untracked) is migrated the same 
 - A post missing `title` or `date`, or with an unparseable `date` → build aborts
   with a message naming the offending file, so CI fails loudly rather than
   publishing a broken page.
+- Two posts resolving to the same slug anchor → build aborts naming both files.
 
 ## How to post (README content)
 
-1. `cp posts/_template.md posts/2026-bestbuy.md`
+1. `cp posts/_template.md posts/2026-06-27-my-post.md`
 2. Edit the file: set `title` and `date`, write the body in Markdown.
 3. `git add posts && git commit -m "new post" && git push`
 4. The GitHub Action builds and deploys automatically.
@@ -168,7 +178,7 @@ The in-progress `blog/2025-bestbuy/` (currently untracked) is migrated the same 
 
 ## Out of scope (YAGNI)
 
-- Per-post pages / permalinks beyond the existing `#YYYYMMDD` anchors.
+- Per-post pages / permalinks beyond the per-post `#SLUG` anchors.
 - RSS/Atom feed, tags, pagination, search.
 - Any client-side JavaScript beyond the existing analytics snippet.
 - Image processing pipeline (current posts use no local images).
