@@ -1,0 +1,59 @@
+h1.blogTitle {
+  color: #999999;
+  margin-top: 0;
+  margin-bottom: 3em;
+}
+
+h2 {
+  font-size: 200%;
+}
+
+h3 {
+  font-size: 150%;
+  padding-top: 3em;
+}
+
+section {
+  padding-bottom: 6em;
+  margin-bottom: 48px;
+  line-height: 1.75;
+}
+
+main {
+  color: #555;
+  text-decoration: none;
+  padding: 1em;
+  font-size: 86%;
+  font-family: 'Source Code Pro', 'Helvetica Neue', Helvetica, Arial, 'Hiragino Kaku Gothic ProN', 'ヒラギノ角ゴ ProN W3', メイリオ, Meiryo, sans-serif;
+  max-width: 640px;
+}
+
+@media (min-width: 960px) {
+  main {
+    padding: 7em;
+  }
+}
+
+a {
+  color: #369ecf;
+  text-decoration: none;
+}
+
+img {
+  max-width: 100%;
+}
+
+blockquote {
+  margin: 1.5em 3em;
+  padding: 5px 20px;
+  border-left: 2px solid #aaa;
+  color: #777;
+}
+
+.codeStyles {
+  color: #8A6534;
+  padding: 4px;
+  background-color: #FFF4DB;
+  font-size: 1.25rem;
+  border-radius: 4px;
+}
