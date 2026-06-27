@@ -67,4 +67,22 @@ class BuildTest < Minitest::Test
     posts = load_posts(@dir)
     assert_equal ["2024-b", "2020-a"], posts.map { |p| p[:slug] }
   end
+
+  def test_non_iso_date_raises
+    path = write("f.md", "---\ntitle: T\ndate: 2024/01/02\n---\n\nbody\n")
+    err = assert_raises(RuntimeError) { parse_post(path) }
+    assert_match(/date/, err.message)
+  end
+
+  def test_empty_title_raises
+    path = write("g.md", "---\ntitle:\ndate: 2024-01-01\n---\n\nbody\n")
+    err = assert_raises(RuntimeError) { parse_post(path) }
+    assert_match(/missing 'title'/, err.message)
+  end
+
+  def test_empty_date_raises
+    path = write("h.md", "---\ntitle: T\ndate:\n---\n\nbody\n")
+    err = assert_raises(RuntimeError) { parse_post(path) }
+    assert_match(/missing 'date'/, err.message)
+  end
 end

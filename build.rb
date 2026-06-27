@@ -27,7 +27,7 @@ def parse_post(path)
   raise "#{path}: missing 'date' in frontmatter" if date_str.nil? || date_str.empty?
 
   begin
-    date = Date.parse(date_str)
+    date = Date.strptime(date_str, "%Y-%m-%d")
   rescue ArgumentError
     raise "#{path}: unparseable date '#{date_str}' (use YYYY-MM-DD)"
   end
