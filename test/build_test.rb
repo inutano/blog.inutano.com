@@ -85,4 +85,29 @@ class BuildTest < Minitest::Test
     err = assert_raises(RuntimeError) { parse_post(path) }
     assert_match(/missing 'date'/, err.message)
   end
+
+  def test_render_sections_uses_slug_anchor_and_title
+    write("2024-foo.md", "---\ntitle: ようこそ\ndate: 2024-01-02\n---\n\n本文\n")
+    posts = load_posts(@dir)
+    html = render_sections(posts)
+    assert_includes html, %(<h2 id="2024-foo">ようこそ</h2>)
+    assert_includes html, "本文"
+  end
+
+  def test_build_writes_site_and_copies_assets
+    write("2024-foo.md", "---\ntitle: Post\ndate: 2024-01-02\n---\n\nbody\n")
+    template = File.join(@dir, "tpl.html.erb")
+    File.write(template, "<main><article><%= sections %></article></main>")
+    assets = File.join(@dir, "assets_src")
+    FileUtils.mkdir_p(assets)
+    File.write(File.join(assets, "style.css"), "main{}")
+    out = File.join(@dir, "out")
+
+    count = build(posts_dir: @dir, template: template, assets: assets, out_dir: out)
+
+    assert_equal 1, count
+    index = File.read(File.join(out, "index.html"))
+    assert_includes index, %(<h2 id="2024-foo">Post</h2>)
+    assert_path_exists File.join(out, "assets", "style.css")
+  end
 end

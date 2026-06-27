@@ -41,3 +41,39 @@ def load_posts(dir)
   paths = Dir.glob(File.join(dir, "*.md")).reject { |p| File.basename(p).start_with?("_") }
   paths.map { |p| parse_post(p) }.sort_by { |p| [p[:date], p[:slug]] }.reverse
 end
+
+require "erb"
+require "fileutils"
+
+ROOT      = __dir__
+POSTS_DIR = File.join(ROOT, "posts")
+TEMPLATE  = File.join(ROOT, "template.html.erb")
+ASSETS    = File.join(ROOT, "assets")
+OUT_DIR   = File.join(ROOT, "_site")
+
+def render_sections(posts)
+  posts.map do |p|
+    %(<section>\n<h2 id="#{p[:slug]}">#{p[:title]}</h2>\n#{p[:body_html]}</section>)
+  end.join("\n")
+end
+
+def render_page(posts, template_path)
+  sections = render_sections(posts)
+  ERB.new(File.read(template_path), trim_mode: "-").result(binding)
+end
+
+def build(posts_dir: POSTS_DIR, template: TEMPLATE, assets: ASSETS, out_dir: OUT_DIR)
+  posts = load_posts(posts_dir)
+  FileUtils.mkdir_p(out_dir)
+  File.write(File.join(out_dir, "index.html"), render_page(posts, template))
+  if Dir.exist?(assets)
+    FileUtils.rm_rf(File.join(out_dir, "assets"))
+    FileUtils.cp_r(assets, File.join(out_dir, "assets"))
+  end
+  posts.size
+end
+
+if __FILE__ == $PROGRAM_NAME
+  n = build
+  puts "Built #{n} posts into #{OUT_DIR}"
+end
